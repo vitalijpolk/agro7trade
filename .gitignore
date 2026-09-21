@@ -57,7 +57,10 @@ npm-debug.log*
 /upload/
 /docs/
 /tools/
-/.github/
+/.github/*
+!/.github/workflows/
+/.github/workflows/*
+!/.github/workflows/deploy.yml
 /вікачка с гит/
 /opencart-4.1.0.3.zip
 /index.old.html
