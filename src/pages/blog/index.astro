@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const dateFmt = new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<BaseLayout
+  title="Блог — Agro7Trade"
+  description="Статті про вибір гібридів, строки сівби та підготовку ґрунту для кукурудзи й соняшника."
+>
+  <section class="blog-page">
+    <div class="container">
+      <h1>Блог</h1>
+      <p class="lead">Практичні матеріали про вибір гібридів і строки польових робіт — без води.</p>
+
+      <ul class="list">
+        {posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id}/`}>
+              <span class="date">{dateFmt.format(post.data.date)} · {post.data.readMinutes} хв</span>
+              <h2>{post.data.title}</h2>
+              <p>{post.data.excerpt}</p>
+              <span class="read-more">Читати статтю</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-page { padding: 64px 0 96px; }
+  h1 { font-size: clamp(2rem, 3.6vw, 2.8rem); }
+  .lead { margin-top: 14px; color: var(--muted); max-width: 56ch; }
+
+  .list {
+    margin-top: 52px;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+  .list li { border-bottom: 1px solid var(--border); }
+  .list a { display: block; padding: 34px 0; }
+  .date { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
+  .list h2 {
+    margin-top: 10px;
+    font-size: 1.35rem;
+    transition: color .15s ease;
+  }
+  .list a:hover h2 { color: var(--blue-deep); }
+  .list p { margin-top: 8px; color: var(--muted); max-width: 62ch; }
+  .read-more {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--blue-deep);
+    border-bottom: 2px solid var(--blue);
+  }
+</style>

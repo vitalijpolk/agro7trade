@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Контакти — Agro7Trade"
+  description="Зв'яжіться з Agro7Trade: телефон, email, форма заявки. Доставка по всій Україні."
+>
+  <section class="wrap contacts-page">
+    <h1>Контакти</h1>
+    <p class="lead">Залиште номер — передзвонимо і звіримо групу стиглості під ваш сезон.</p>
+
+    <div class="contact-grid">
+      <div>
+        <ul class="contact-info">
+          <li>
+            <span class="label">Телефон</span>
+            <a href="tel:+380994527949">+38 (099) 452-79-49</a>
+          </li>
+          <li>
+            <span class="label">Email</span>
+            <a href="mailto:agro7trade.ua@gmail.com">agro7trade.ua@gmail.com</a>
+          </li>
+          <li>
+            <span class="label">Графік роботи</span>
+            <span>Пн–Пт: 9:00–18:00</span>
+          </li>
+          <li>
+            <span class="label">Доставка</span>
+            <span>По всій Україні, крім тимчасово окупованих територій</span>
+          </li>
+        </ul>
+      </div>
+
+      <form class="contact-form" id="contactForm">
+        <div class="fg">
+          <label for="cName">Ваше ім'я</label>
+          <input type="text" id="cName" name="name" placeholder="Іван Іваненко" required />
+        </div>
+        <div class="fg">
+          <label for="cPhone">Телефон</label>
+          <input type="tel" id="cPhone" name="phone" placeholder="+38 (___) ___-__-__" required />
+        </div>
+        <div class="fg">
+          <label for="cMsg">Що цікавить</label>
+          <textarea id="cMsg" name="message" placeholder="Наприклад: кукурудза «Самарія», 40 га, Полтавська обл."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Надіслати заявку</button>
+        <p class="form-note" id="formNote" role="status"></p>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+  .contacts-page { padding: 56px 0 90px; }
+  h1 { font-size: clamp(2rem, 3.6vw, 2.6rem); }
+  .lead { margin-top: 14px; color: var(--muted); max-width: 56ch; }
+
+  .contact-grid { margin-top: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+
+  .contact-info { display: flex; flex-direction: column; gap: 20px; }
+  .contact-info li { display: flex; flex-direction: column; gap: 4px; }
+  .contact-info .label { font-size: 0.82rem; font-weight: 700; color: var(--muted); }
+  .contact-info a { font-weight: 700; color: var(--ink); font-size: 1.1rem; }
+  .contact-info a:hover { color: var(--blue-deep); }
+  .contact-info span:not(.label) { color: var(--text); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 14px; }
+  .fg { display: flex; flex-direction: column; gap: 6px; }
+  .fg label { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+  .fg input, .fg textarea {
+    font-family: var(--font-body); font-size: 0.96rem;
+    padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 9px;
+    background: #fff; color: var(--text);
+  }
+  .fg textarea { min-height: 92px; resize: vertical; }
+  .fg input:focus, .fg textarea:focus { border-color: var(--blue); outline: none; }
+  .form-note { font-size: 0.86rem; color: var(--blue-deep); min-height: 1.2em; }
+
+  @media (max-width: 800px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contactForm') as HTMLFormElement | null;
+  const note = document.getElementById('formNote');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (note) note.textContent = 'Форма поки не підключена до бекенду — це чернетка вёрстки.';
+  });
+</script>

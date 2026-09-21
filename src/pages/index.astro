@@ -1,0 +1,191 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HybridCard from '../components/HybridCard.astro';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { pole1, meshkiAgro7, cornImg, sunflowerImg, cornCategoryImg, sunflowerCategoryImg } from '../lib/images';
+import { hybrids, cropLabels } from '../data/hybrids';
+
+const featured = hybrids.slice(0, 4);
+
+const categories = [
+  { crop: 'kukurudza' as const, image: cornCategoryImg },
+  { crop: 'sonyashnyk' as const, image: sunflowerCategoryImg },
+];
+
+const posts = (await getCollection('posts'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const dateFmt = new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'long' });
+---
+
+<BaseLayout
+  title="Купити насіння кукурудзи та соняшника | Agro7Trade"
+  description="Agro7Trade — купити сертифіковане насіння кукурудзи та соняшника з перевіреними характеристиками. Підбір гібрида під ваш регіон і технологію вирощування. Доставка по всій Україні."
+>
+  <section class="hero">
+    <Image src={pole1} alt="Поле кукурудзи" class="hero-bg" widths={[640, 1200, 1800]} sizes="100vw" />
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <h1>Насіння кукурудзи та соняшника з підбором під ваше поле</h1>
+      <p class="lead">
+        Сертифіковані гібриди з перевіреними характеристиками, підбір під ваш регіон і технологію вирощування, доставка по всій Україні.
+      </p>
+      <div class="hero-actions">
+        <a href="/catalog" class="btn btn-primary">Каталог гібридів</a>
+        <a href="/contacts" class="btn btn-outline">Замовити дзвінок</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories-section">
+    <div class="wrap">
+      <h2>Категорії</h2>
+      <div class="cat-grid">
+        {categories.map((c) => (
+          <a class="cat-card" href={`/catalog/${c.crop}/`}>
+            <Image src={c.image} alt={cropLabels[c.crop].title} width={720} height={480} densities={[1, 2]} />
+            <span class="cat-label">{cropLabels[c.crop].title}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="products-section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>З каталогу</h2>
+        <a href="/catalog" class="see-all">Весь каталог →</a>
+      </div>
+      <div class="grid">
+        {featured.map((h) => (
+          <HybridCard hybrid={h} image={h.crop === 'kukurudza' ? cornImg : sunflowerImg} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="about-band">
+    <div class="wrap about-grid">
+      <div class="about-photo">
+        <Image src={meshkiAgro7} alt="Готова продукція Agro7Trade на складі" width={640} height={480} densities={[1, 2]} />
+      </div>
+      <div class="about-text">
+        <h2>Про компанію</h2>
+        <p>
+          Постачаємо сертифіковане насіння кукурудзи та соняшника, підбираємо гібрид під ваш регіон
+          і сівозміну, супроводжуємо агрономом від замовлення до сівби.
+        </p>
+        <a href="/about" class="btn btn-outline">Дізнатись більше</a>
+      </div>
+    </div>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="blog-section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>З блогу</h2>
+          <a href="/blog" class="see-all">Усі статті →</a>
+        </div>
+        <div class="blog-grid">
+          {posts.map((post) => (
+            <a class="blog-card" href={`/blog/${post.id}/`}>
+              <span class="post-date">{dateFmt.format(post.data.date)} · {post.data.readMinutes} хв</span>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.excerpt}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="cta-band">
+    <div class="wrap cta-inner">
+      <div>
+        <h2>Не впевнені, який гібрид підійде?</h2>
+        <p>Залиште заявку — агроном підбере гібрид під ваш регіон і технологію вирощування.</p>
+      </div>
+      <a href="/contacts" class="btn btn-primary">Залишити заявку</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+  h2 {
+    font-size: 1.6rem;
+    border-bottom: 2px solid var(--blue);
+    display: inline-block;
+    padding-bottom: 6px;
+    margin-bottom: 24px;
+  }
+
+  /* Hero */
+  .hero { position: relative; height: 480px; display: flex; align-items: center; overflow: hidden; }
+  .hero :global(.hero-bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(12,16,28,.82) 0%, rgba(12,16,28,.55) 55%, rgba(12,16,28,.3) 100%);
+  }
+  .hero-content { position: relative; z-index: 1; color: #fff; }
+  .hero h1 { color: #fff; font-size: clamp(1.8rem, 3.6vw, 2.7rem); max-width: 16ch; line-height: 1.15; }
+  .hero .lead { margin-top: 18px; max-width: 46ch; color: #dfe3ee; font-size: 1.02rem; line-height: 1.6; }
+  .hero-actions { display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap; }
+
+  .categories-section { background: var(--panel); padding: 56px 0; }
+  .products-section { background: var(--paper); padding: 64px 0; }
+  .blog-section { background: var(--panel); padding: 64px 0; }
+
+  .cat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .cat-card {
+    display: block; background: #fff; border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(20,20,20,.05);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .cat-card:hover { transform: translateY(-3px); box-shadow: 0 14px 26px rgba(20,20,20,.1); }
+  .cat-card :global(img) {
+    display: block; width: 100%; aspect-ratio: 3/2;
+    object-fit: cover; object-position: center; background: var(--paper);
+  }
+  .cat-label { display: block; padding: 20px 24px; font-weight: 700; font-size: 1.15rem; color: var(--ink); }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; }
+  .section-head h2 { margin-bottom: 0; }
+  .see-all { font-weight: 700; color: var(--blue-deep); font-size: 0.92rem; }
+
+  .grid { margin-top: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+
+  .about-band { background: var(--dark); padding: 64px 0; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+  .about-band h2 { color: #fff; border-color: var(--blue); }
+  .about-text p { color: #b7bccb; line-height: 1.65; margin-bottom: 20px; font-size: 1.02rem; }
+  .about-photo :global(img) { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+
+  .blog-grid { margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .blog-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 22px; transition: transform .15s ease, box-shadow .15s ease; }
+  .blog-card:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(20,20,20,.08); }
+  .post-date { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+  .blog-card h3 { margin-top: 10px; font-size: 1.05rem; color: var(--ink); }
+  .blog-card p { margin-top: 8px; font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+  .cta-band { background: var(--dark); border-top: 1px solid rgba(255,255,255,.08); }
+  .cta-inner {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 48px 20px; flex-wrap: wrap;
+  }
+  .cta-inner h2 { color: #fff; border-color: var(--blue); }
+  .cta-inner p { color: #b7bccb; margin-top: 8px; }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 30px; }
+    .blog-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    .cat-grid { grid-template-columns: 1fr; }
+    .hero { height: 420px; }
+  }
+</style>

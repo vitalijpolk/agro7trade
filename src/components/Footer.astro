@@ -1,0 +1,76 @@
+---
+import { Image } from 'astro:assets';
+import { logo } from '../lib/images';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <a class="logo" href="/">
+        <Image src={logo} alt="Agro7Trade" height={58} width={113} densities={[1, 2, 3]} />
+      </a>
+      <p>
+        Постачаємо сертифіковане насіння кукурудзи та соняшника, підбираємо гібрид під ваш регіон
+        і сівозміну, супроводжуємо агрономом від замовлення до сівби.
+      </p>
+    </div>
+
+    <div>
+      <p class="footer-heading">Каталог</p>
+      <ul>
+        <li><a href="/catalog/kukurudza">Кукурудза</a></li>
+        <li><a href="/catalog/sonyashnyk">Соняшник</a></li>
+        <li><a href="/about">Про компанію</a></li>
+        <li><a href="/blog">Блог</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-contacts">
+      <p class="footer-heading">Контакти</p>
+      <p class="hours-line">Пн–Пт: 9:00–18:00</p>
+      <a class="contact-link" href="tel:+380994527949">+38 (099) 452-79-49</a>
+      <a class="contact-link" href="mailto:agro7trade.ua@gmail.com">agro7trade.ua@gmail.com</a>
+    </div>
+  </div>
+  <p class="copy">© {year} Agro7Trade</p>
+</footer>
+
+<style>
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+
+  .site-footer { background: var(--dark); color: #c9c9c9; margin-top: 60px; padding: 50px 0 20px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1.3fr; gap: 30px; align-items: start; }
+
+  .logo { display: inline-flex; align-items: center; margin-bottom: 14px; }
+  .logo :global(img) { display: block; height: 58px; width: auto; }
+  .footer-grid > div > p:not(.footer-heading):not(.hours-line) { font-size: 0.92rem; line-height: 1.65; max-width: 40ch; }
+
+  .footer-heading { color: #fff; font-weight: 700; margin: 0 0 12px; }
+  .footer-grid ul { list-style: none; padding: 0; margin: 0; }
+  .footer-grid li { margin-bottom: 8px; }
+  .footer-grid a:hover { color: var(--blue); }
+
+  .footer-contacts { background: var(--blue); border-radius: 14px; padding: 18px 20px; }
+  .footer-contacts .footer-heading { margin: 0 0 10px; }
+  .footer-contacts .hours-line { color: rgba(255,255,255,.75); font-size: 0.82rem; margin-bottom: 12px; }
+  .footer-contacts .contact-link {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.18); color: #fff; font-weight: 600; font-size: 0.88rem;
+    border-radius: 8px; padding: 8px 12px; margin-bottom: 8px;
+    transition: background .15s;
+  }
+  .footer-contacts .contact-link:last-child { margin-bottom: 0; }
+  .footer-contacts .contact-link:hover { background: rgba(255,255,255,.3); }
+
+  .copy { text-align: center; color: #777; margin: 30px 0 0; font-size: 0.85rem; }
+
+  @media (max-width: 800px) {
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px 20px; }
+    .footer-contacts { grid-column: 1 / -1; }
+  }
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>

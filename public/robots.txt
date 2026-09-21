@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://agro7trade.com.ua/sitemap-index.xml

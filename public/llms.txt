@@ -1,0 +1,32 @@
+# Agro7Trade
+
+> Agro7Trade постачає сертифіковане насіння кукурудзи та соняшника в Україні. Купити насіння кукурудзи або соняшника з підбором гібрида під регіон, технологію вирощування та сівозміну, з доставкою по всій Україні.
+
+Agro7Trade — постачальник насіння кукурудзи (гібриди ФАО 270–350) та соняшника (гібриди під технології Гранстар, Clearfield, класичну), з повними характеристиками, реальними цінами та агрономічним супроводом.
+
+## Каталог
+
+- [Каталог насіння](https://agro7trade.com.ua/catalog/): всі гібриди кукурудзи та соняшника
+- [Купити насіння кукурудзи](https://agro7trade.com.ua/catalog/kukurudza/): гібриди «Ангора» (ФАО 270), «Самарія» (ФАО 300), «Сігірія» (ФАО 350)
+- [Купити насіння соняшника](https://agro7trade.com.ua/catalog/sonyashnyk/): гібриди «Лусон», «Каскара», «Ласса», «Набаро»
+
+## Товари
+
+- [Кукурудза «Ангора» (ФАО 270)](https://agro7trade.com.ua/product/kukurudza-angora-fao-270/): середньостиглий гібрид зернового напряму
+- [Кукурудза «Самарія» (ФАО 300)](https://agro7trade.com.ua/product/kukurudza-samariya-fao-300/): середньостиглий гібрид, стабільний у різних умовах
+- [Кукурудза «Сігірія» (ФАО 350)](https://agro7trade.com.ua/product/kukurudza-sigiriya-fao-350/): універсальний гібрид, зерно і силос
+- [Соняшник «Лусон»](https://agro7trade.com.ua/product/sonyashnyk-luson/): під технології Гранстар, SUMO, ExpressSun
+- [Соняшник «Каскара»](https://agro7trade.com.ua/product/sonyashnyk-kaskara/): технологія ExpressSan, потужна коренева система
+- [Соняшник «Ласса»](https://agro7trade.com.ua/product/sonyashnyk-lassa/): технологія Clearfield, потенціал 53 ц/га
+- [Соняшник «Набаро»](https://agro7trade.com.ua/product/sonyashnyk-nabaro/): класична технологія, олійність 53%
+
+## Блог
+
+- [Як обрати гібрид кукурудзи за шкалою ФАО](https://agro7trade.com.ua/blog/yak-obraty-gibryd-kukurudzy-za-shkaloyu-fao/)
+- [Коли сіяти соняшник: строки та температура ґрунту](https://agro7trade.com.ua/blog/koly-siyaty-sonyashnyk-stroky-ta-temperatura-gruntu/)
+- [Коли збирати кукурудзу та соняшник: ознаки стиглості та вологість зерна](https://agro7trade.com.ua/blog/koly-zbyraty-kukurudzu-ta-sonyashnyk-oznaky-styglosti/)
+
+## Компанія
+
+- [Про компанію](https://agro7trade.com.ua/about/): сертифіковане насіння, агрономічний супровід, доставка по Україні
+- [Контакти](https://agro7trade.com.ua/contacts/): телефон, email, форма заявки

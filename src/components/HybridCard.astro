@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { minPrice, type Hybrid } from '../data/hybrids';
+
+interface Props {
+  hybrid: Hybrid;
+  image: ImageMetadata;
+}
+
+const { hybrid, image } = Astro.props;
+const href = `/product/${hybrid.slug}/`;
+const price = minPrice(hybrid);
+const priceLabel = price
+  ? hybrid.priceTiers && hybrid.priceTiers.length > 1
+    ? `від ${price.toLocaleString('uk-UA')} грн`
+    : `${price.toLocaleString('uk-UA')} грн`
+  : 'ціна за запитом';
+---
+
+<div class="hybrid-card">
+  <a class="card-link" href={href}>
+    <div class="photo-crop">
+      <Image src={image} alt={hybrid.title} width={240} height={280} densities={[1, 2]} />
+    </div>
+    <div class="info">
+      <h3>{hybrid.title}</h3>
+      <p class="subtitle">{hybrid.note}</p>
+    </div>
+  </a>
+
+  <div class="footer">
+    <span class="price">{priceLabel}</span>
+    <a class="cta" href={href}>
+      Замовити <span class="arrow" aria-hidden="true">→</span>
+    </a>
+  </div>
+</div>
+
+<style>
+  .hybrid-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(20,20,20,.05);
+    transition: transform .18s ease, box-shadow .18s ease;
+    display: flex; flex-direction: column; height: 100%;
+  }
+  .hybrid-card:hover { transform: translateY(-3px); box-shadow: 0 14px 26px rgba(20,20,20,.1); }
+
+  .card-link { display: flex; flex-direction: column; flex: 1; }
+
+  .photo-crop { background: var(--panel); aspect-ratio: 6/7; overflow: hidden; }
+  .photo-crop :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+  .info { padding: 14px 16px 0; }
+  h3 { font-size: 0.98rem; font-weight: 700; color: var(--ink); }
+  .subtitle { margin-top: 4px; font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
+
+  .footer { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+  .price { font-weight: 800; font-size: 1.1rem; color: var(--ink); }
+
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    background: var(--blue); color: #fff; font-weight: 700; font-size: 0.86rem;
+    border-radius: 9px; padding: 10px 15px;
+    transition: background .15s;
+  }
+  .cta:hover { background: var(--blue-deep); }
+  .arrow { transition: transform .15s ease; }
+  .cta:hover .arrow { transform: translateX(2px); }
+</style>

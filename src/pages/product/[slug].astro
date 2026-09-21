@@ -1,0 +1,343 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { cornImg, sunflowerImg, getFieldPhoto } from '../../lib/images';
+import { hybrids, cropLabels, minPrice } from '../../data/hybrids';
+
+export function getStaticPaths() {
+  return hybrids.map((h) => ({ params: { slug: h.slug }, props: { hybrid: h } }));
+}
+
+const { hybrid } = Astro.props;
+const image = hybrid.crop === 'kukurudza' ? cornImg : sunflowerImg;
+const fieldPhoto = getFieldPhoto(hybrid.slug);
+const label = cropLabels[hybrid.crop];
+const price = minPrice(hybrid);
+
+const pageTitle = `Купити ${hybrid.title} — ціна, характеристики | Agro7Trade`;
+const pageDescription = `Купити насіння ${label.single} «${hybrid.title.match(/«[^»]+»/)?.[0] ?? hybrid.title}» від Agro7Trade. ${hybrid.note}. ${price ? `Ціна від ${price.toLocaleString('uk-UA')} грн. ` : ''}Доставка по всій Україні.`;
+
+const siteUrl = Astro.site!.toString().replace(/\/$/, '');
+const productUrl = `${siteUrl}/product/${hybrid.slug}/`;
+
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: hybrid.title,
+  description: hybrid.description,
+  sku: hybrid.article ?? hybrid.slug,
+  brand: { '@type': 'Brand', name: 'Agro7Trade' },
+  ...(price
+    ? {
+        offers: {
+          '@type': 'Offer',
+          url: productUrl,
+          priceCurrency: 'UAH',
+          price: price,
+          availability: 'https://schema.org/InStock',
+          seller: { '@type': 'Organization', name: 'Agro7Trade' },
+        },
+      }
+    : {}),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Головна', item: siteUrl + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Каталог', item: `${siteUrl}/catalog/` },
+    { '@type': 'ListItem', position: 3, name: label.title, item: `${siteUrl}/catalog/${hybrid.crop}/` },
+    { '@type': 'ListItem', position: 4, name: hybrid.title, item: productUrl },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} type="product">
+  <Fragment slot="schema">
+    <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  </Fragment>
+
+  <section class="wrap product-page">
+    <nav class="breadcrumbs" aria-label="Хлібні крихти">
+      <a href="/">Головна</a>
+      <span>/</span>
+      <a href="/catalog">Каталог</a>
+      <span>/</span>
+      <a href={`/catalog/${hybrid.crop}/`}>{label.title}</a>
+      <span>/</span>
+      <span aria-current="page">{hybrid.title}</span>
+    </nav>
+
+    <div class="product-grid">
+      <div class="photo">
+        <Image src={image} alt={hybrid.title} width={480} height={560} densities={[1, 2]} />
+      </div>
+      <div class="info">
+        <h1>{hybrid.title}</h1>
+        <p class="note">{hybrid.note}</p>
+
+        {hybrid.priceTiers && hybrid.priceTiers.length > 0 && (
+          <div class="price-block">
+            <span class="price" id="displayPrice">
+              {hybrid.priceTiers.length === 1
+                ? `${price?.toLocaleString('uk-UA')} грн`
+                : `від ${price?.toLocaleString('uk-UA')} грн`}
+            </span>
+          </div>
+        )}
+
+        <form class="order-form" id="orderForm">
+          {hybrid.priceTiers && hybrid.priceTiers.length > 1 && (
+            <div class="fg">
+              <label for="oVariant">Варіант</label>
+              <select id="oVariant" name="variant">
+                {hybrid.priceTiers.map((t) => (
+                  <option value={t.price}>{t.label} — {t.price.toLocaleString('uk-UA')} грн</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div class="fg">
+            <label for="oQty">Кількість</label>
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn minus" aria-label="Зменшити кількість">−</button>
+              <input type="number" id="oQty" name="qty" value="1" min="1" inputmode="numeric" />
+              <button type="button" class="qty-btn plus" aria-label="Збільшити кількість">+</button>
+            </div>
+          </div>
+
+          <div class="fg">
+            <label for="oName">Ваше ім'я</label>
+            <input type="text" id="oName" name="name" placeholder="Іван Іваненко" required />
+          </div>
+
+          <div class="fg">
+            <label for="oPhone">Телефон</label>
+            <input type="tel" id="oPhone" name="phone" placeholder="+38 (___) ___-__-__" required />
+          </div>
+
+          <div class="fg">
+            <label for="oComment">Коментар</label>
+            <textarea id="oComment" name="comment" placeholder="Необов'язково"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Замовити</button>
+          <p class="form-note" id="orderNote" role="status"></p>
+        </form>
+
+        <div class="quick-order">
+          <span class="quick-label">Або замовте одразу:</span>
+          <div class="quick-buttons">
+            <a href="https://t.me/+380994527949" target="_blank" rel="noopener" class="quick-btn tg">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212-.07-.062-.174-.041-.249-.024-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+              Написати в Telegram
+            </a>
+            <a href="tel:+380994527949" class="quick-btn call">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+              </svg>
+              +38 (099) 452-79-49
+            </a>
+          </div>
+        </div>
+
+        <p class="description">{hybrid.description}</p>
+      </div>
+    </div>
+
+    {hybrid.specs && hybrid.specs.length > 0 && (
+      <div class="spec-section">
+        <h2>Характеристики</h2>
+        <table class="spec-table">
+          <tbody>
+            {hybrid.specs.map((s) => (
+              <tr>
+                <th>{s.label}</th>
+                <td>{s.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+
+    {hybrid.resistance && hybrid.resistance.length > 0 && (
+      <div class="spec-section">
+        <h2>Стійкість та адаптивність</h2>
+        <table class="spec-table">
+          <tbody>
+            {hybrid.resistance.map((s) => (
+              <tr>
+                <th>{s.label}</th>
+                <td>{s.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+
+    {fieldPhoto && (
+      <div class="field-photo-section">
+        <h2>Фото з поля</h2>
+        <p class="field-photo-caption">Табличка гібрида «{hybrid.title.match(/«[^»]+»/)?.[0] ?? hybrid.title}» на випробувальній ділянці Agro7Trade.</p>
+        <Image src={fieldPhoto} alt={`Гібрид ${hybrid.title} на полі з табличкою Agro7Trade`} width={900} height={600} densities={[1, 2]} class="field-photo-img" />
+      </div>
+    )}
+
+    {hybrid.recommendations && hybrid.recommendations.length > 0 && (
+      <div class="reco-section">
+        <h2>Практичні рекомендації з вирощування</h2>
+        <ol class="reco-list">
+          {hybrid.recommendations.map((r: { title: string; text: string }, i: number) => (
+            <li>
+              <span class="reco-no">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{r.title}</h3>
+                <p>{r.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+  .product-page { padding: 48px 0 90px; }
+  .breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--blue-deep); }
+  .breadcrumbs span[aria-current] { color: var(--ink); font-weight: 600; }
+
+  .product-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .photo {
+    background: var(--panel); border-radius: 16px; overflow: hidden; aspect-ratio: 6/7;
+    position: sticky; top: 96px;
+  }
+  .photo :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+  h1 { font-size: clamp(1.7rem, 3vw, 2.2rem); }
+  .note { margin-top: 10px; color: var(--muted); font-size: 1rem; }
+
+  .price-block {
+    margin-top: 24px; padding: 20px 0 0;
+    border-top: 1px solid var(--border);
+  }
+  .price { font-size: 1.7rem; font-weight: 800; color: var(--ink); }
+
+  .order-form {
+    margin-top: 20px; padding: 20px 0; display: flex; flex-direction: column; gap: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .fg { display: flex; flex-direction: column; gap: 6px; }
+  .fg label { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+  .fg input, .fg textarea, .fg select {
+    font-family: var(--font-body); font-size: 0.96rem;
+    padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 9px;
+    background: #fff; color: var(--text);
+  }
+  .fg textarea { min-height: 76px; resize: vertical; }
+  .fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--blue); outline: none; }
+
+  .qty-stepper { display: flex; align-items: center; width: fit-content; border: 1.5px solid var(--border); border-radius: 9px; overflow: hidden; }
+  .qty-btn { width: 40px; height: 42px; background: var(--panel); font-size: 1.1rem; color: var(--ink); transition: background .12s; }
+  .qty-btn:hover { background: var(--panel-hov); }
+  .qty-stepper input {
+    width: 56px; height: 42px; border: none; border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
+    text-align: center; font-weight: 700; padding: 0;
+    -moz-appearance: textfield;
+  }
+  .qty-stepper input::-webkit-outer-spin-button, .qty-stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .order-form .btn { align-self: flex-start; margin-top: 6px; }
+  .form-note { font-size: 0.86rem; color: var(--blue-deep); min-height: 1.2em; }
+
+  .description { margin-top: 24px; color: var(--text); line-height: 1.7; }
+
+  .quick-order { margin-top: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .quick-label { font-size: 0.86rem; color: var(--muted); font-weight: 600; }
+  .quick-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+  .quick-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border-radius: 9px; font-size: 0.9rem; font-weight: 700;
+    border: 1.5px solid var(--border); color: var(--ink);
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .quick-btn.tg:hover { border-color: #29a9eb; color: #29a9eb; background: rgba(41,169,235,.06); }
+  .quick-btn.call:hover { border-color: var(--blue); color: var(--blue-deep); background: rgba(47,111,237,.06); }
+
+  .spec-section { margin-top: 56px; max-width: 720px; }
+  .spec-section h2 { font-size: 1.3rem; margin-bottom: 18px; }
+  .spec-table { width: 100%; border-collapse: collapse; }
+  .spec-table tr { border-bottom: 1px solid var(--border); }
+  .spec-table th, .spec-table td { text-align: left; padding: 11px 0; font-size: 0.94rem; }
+  .spec-table th { font-weight: 600; color: var(--muted); width: 46%; }
+  .spec-table td { color: var(--ink); font-weight: 600; }
+
+  .field-photo-section { margin-top: 56px; max-width: 900px; }
+  .field-photo-section h2 { font-size: 1.3rem; margin-bottom: 10px; }
+  .field-photo-caption { color: var(--muted); font-size: 0.92rem; margin-bottom: 18px; }
+  .field-photo-section :global(.field-photo-img) {
+    width: 100%; height: auto; border-radius: 14px; display: block;
+    box-shadow: 0 8px 24px rgba(20,20,20,.1);
+  }
+
+  .reco-section { margin-top: 56px; max-width: 760px; }
+  .reco-section h2 { font-size: 1.3rem; margin-bottom: 24px; }
+  .reco-list { display: flex; flex-direction: column; gap: 24px; }
+  .reco-list li { display: flex; gap: 18px; }
+  .reco-no {
+    font-size: 0.85rem; font-weight: 800; color: var(--blue);
+    flex-shrink: 0; padding-top: 2px; min-width: 26px;
+  }
+  .reco-list h3 { font-size: 1.02rem; color: var(--ink); margin-bottom: 6px; }
+  .reco-list p { color: var(--muted); font-size: 0.94rem; line-height: 1.6; }
+
+  @media (max-width: 800px) {
+    .product-grid { grid-template-columns: 1fr; gap: 28px; }
+    .photo { position: static; }
+    .spec-table th, .spec-table td { font-size: 0.88rem; }
+  }
+</style>
+
+<script>
+  const qtyInput = document.getElementById('oQty') as HTMLInputElement | null;
+  document.querySelector('.qty-btn.minus')?.addEventListener('click', () => {
+    if (!qtyInput) return;
+    qtyInput.value = String(Math.max(1, (parseInt(qtyInput.value, 10) || 1) - 1));
+  });
+  document.querySelector('.qty-btn.plus')?.addEventListener('click', () => {
+    if (!qtyInput) return;
+    qtyInput.value = String((parseInt(qtyInput.value, 10) || 1) + 1);
+  });
+
+  const variantSelect = document.getElementById('oVariant') as HTMLSelectElement | null;
+  const displayPrice = document.getElementById('displayPrice');
+  variantSelect?.addEventListener('change', () => {
+    if (!displayPrice) return;
+    const price = parseInt(variantSelect.value, 10);
+    displayPrice.textContent = `${price.toLocaleString('uk-UA')} грн`;
+  });
+
+  const form = document.getElementById('orderForm') as HTMLFormElement | null;
+  const note = document.getElementById('orderNote');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (note) note.textContent = 'Форма поки не підключена до бекенду — це чернетка вёрстки.';
+  });
+</script>

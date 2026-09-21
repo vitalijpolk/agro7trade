@@ -1,0 +1,93 @@
+---
+import { Image } from 'astro:assets';
+import { logo } from '../lib/images';
+
+const navItems = [
+  { href: '/', label: 'Головна' },
+  { href: '/catalog', label: 'Каталог' },
+  { href: '/about', label: 'Про компанію' },
+  { href: '/blog', label: 'Блог' },
+  { href: '/contacts', label: 'Контакти' },
+];
+---
+
+<header class="site-header">
+  <div class="main-nav">
+    <div class="wrap main-nav-inner">
+      <a class="logo" href="/">
+        <Image src={logo} alt="Agro7Trade" height={72} width={140} densities={[1, 2, 3]} />
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Меню" aria-expanded="false" aria-controls="main-nav">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav id="main-nav">
+        {navItems.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+        <a href="/contacts" class="nav-cta">Замовити дзвінок</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+
+  .main-nav {
+    background: var(--dark);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .main-nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; position: relative;
+  }
+
+  .logo { display: inline-flex; align-items: center; }
+  .logo :global(img) { display: block; height: 72px; width: auto; margin: -14px 0; }
+
+  nav#main-nav { display: flex; align-items: center; gap: 22px; font-size: 0.94rem; font-weight: 600; white-space: nowrap; }
+  nav#main-nav > a { color: #d8d8d8; }
+  nav#main-nav > a:hover { color: var(--blue); }
+  .nav-cta {
+    background: var(--blue); color: #fff !important;
+    padding: 9px 18px; border-radius: 8px; font-weight: 700;
+  }
+  .nav-cta:hover { background: var(--blue-deep); }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 5px;
+    width: 38px; height: 32px; background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .nav-toggle span { display: block; height: 2px; background: #fff; border-radius: 2px; }
+
+  @media (max-width: 900px) {
+    .nav-toggle { display: flex; }
+    nav#main-nav {
+      display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 20;
+      flex-direction: column; align-items: stretch; gap: 0;
+      background: #fff; color: var(--text);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 14px 24px rgba(0,0,0,.12);
+    }
+    nav#main-nav.is-open { display: flex; }
+    nav#main-nav > a {
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      color: var(--text); width: 100%;
+    }
+    .nav-cta { border-radius: 0; text-align: center; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector('.nav-toggle');
+  const nav = document.getElementById('main-nav');
+  toggle?.addEventListener('click', () => {
+    const isOpen = nav?.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
+  });
+</script>

@@ -1,0 +1,86 @@
+# Config and Htaccess Files
+/upload/.htaccess
+/upload/config.php
+/upload/admin/config.php
+
+# Image Cache Files
+/upload/image/cache/*
+!/upload/image/cache/index.html
+
+# Backup Files
+/upload/system/storage/backup/*
+!/upload/system/storage/backup/index.html
+
+# System Cache Files
+/upload/system/storage/cache/*
+!/upload/system/storage/cache/index.html
+
+# Download Files
+/upload/system/storage/download/*
+!/upload/system/storage/download/index.html
+
+# Log Files
+/upload/system/storage/logs/*
+!/upload/system/storage/logs/index.html
+
+# Marketplace Files
+# /upload/system/storage/marketplace/*
+# !/upload/system/storage/marketplace/index.html
+
+# Session Files
+/upload/system/storage/session/*
+!/upload/system/storage/session/index.html
+
+# Upload Files
+/upload/system/storage/upload/*
+!/upload/system/storage/upload/index.html
+
+# CSS Files
+/upload/catalog/view/stylesheet/stylesheet.css
+
+# IDE Project files
+/upload/.idea/*
+/.idea/*
+/.DS_Store
+/.cache
+/.php-cs-fixer.cache
+
+# --- Astro site (current project) ---
+node_modules/
+dist/
+.astro/
+npm-debug.log*
+
+# Leftover / unrelated material at repo root — not part of the live Astro site.
+# (OpenCart source tree from an earlier abandoned attempt, plus raw source photos
+# that have already been processed into src/assets and src/content/posts.)
+/upload/
+/docs/
+/tools/
+/.github/
+/вікачка с гит/
+/opencart-4.1.0.3.zip
+/index.old.html
+/.editorconfig
+/.php-cs-fixer.php
+/CHANGELOG.md
+/Dockerfile
+/INSTALL.md
+/LICENSE.md
+/README.md
+/UPGRADE.md
+/apigen.neon
+/buildspec.yml
+/composer.json
+/composer.lock
+/crowdin.yml
+/docker-compose.yml
+/phpstan.neon
+*.jpg
+*.JPG
+*.jpeg
+*.png
+!public/*.jpg
+!public/*.png
+!src/**/*.jpg
+!src/**/*.png

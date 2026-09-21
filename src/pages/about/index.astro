@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { meshkiAgro7 } from '../../lib/images';
+---
+
+<BaseLayout
+  title="Про компанію — Agro7Trade"
+  description="Agro7Trade постачає сертифіковане насіння кукурудзи та соняшника, підбирає гібрид під регіон і сівозміну, супроводжує агрономом."
+>
+  <section class="wrap about-page">
+    <h1>Про компанію</h1>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          Ми постачаємо сертифіковане насіння кукурудзи та соняшника й підбираємо гібрид під ваш
+          регіон і сівозміну, а не продаємо «одне найкраще насіння всім підряд».
+        </p>
+        <p>Що входить у супровід:</p>
+        <ul>
+          <li>Підбір гібрида під суму активних температур і технологію вирощування вашого поля.</li>
+          <li>Консультація агронома щодо технології вирощування й строків сівби.</li>
+          <li>Партія із протоколом лабораторного аналізу на кожен мішок.</li>
+          <li>Доставка власним транспортом або перевізником по всій Україні.</li>
+        </ul>
+        <a href="/contacts" class="btn btn-primary">Порадитись з агрономом</a>
+      </div>
+      <div class="about-media">
+        <Image src={meshkiAgro7} alt="Готова продукція Agro7Trade на складі" class="media-tile" width={480} height={600} densities={[1, 2]} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+  .about-page { padding: 56px 0 90px; }
+  h1 { font-size: clamp(2rem, 3.6vw, 2.6rem); margin-bottom: 40px; }
+
+  .about-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .about-text p { color: var(--muted); line-height: 1.65; margin-bottom: 14px; }
+  .about-text ul { margin: 0 0 8px; padding-left: 0; color: var(--muted); line-height: 1.65; }
+  .about-text li { margin-bottom: 12px; padding-left: 22px; position: relative; }
+  .about-text li::before {
+    content: ''; position: absolute; left: 0; top: 10px; width: 10px; height: 2px;
+    background: var(--blue); border-radius: 2px;
+  }
+  .about-text .btn { margin-top: 12px; }
+
+  .about-media { width: 100%; max-width: 420px; margin: 0 auto; }
+  .about-media :global(.media-tile) {
+    width: 100%; aspect-ratio: 4/5; object-fit: cover;
+    border-radius: 14px; box-shadow: 0 8px 20px rgba(20,20,20,.12);
+  }
+
+  @media (max-width: 900px) {
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-media { max-width: 380px; }
+  }
+</style>
