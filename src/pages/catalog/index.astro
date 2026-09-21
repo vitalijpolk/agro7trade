@@ -56,7 +56,7 @@ const breadcrumbSchema = {
 
 <style>
   .wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
-  .page-head { padding: 40px 0 8px; }
+  .page-head { padding-top: 40px; padding-bottom: 8px; }
   .breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
   .breadcrumbs a { color: var(--muted); }
   .breadcrumbs a:hover { color: var(--blue-deep); }
@@ -65,7 +65,8 @@ const breadcrumbSchema = {
   .lead { margin-top: 14px; color: var(--muted); max-width: 56ch; }
 
   .crop-grid {
-    padding: 40px 0 80px;
+    padding-top: 40px;
+    padding-bottom: 80px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
