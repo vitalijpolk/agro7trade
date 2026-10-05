@@ -122,6 +122,19 @@ const faqSchema = post.data.faq && post.data.faq.length > 0
   .prose :global(ol) { list-style: decimal; }
   .prose :global(li) { margin-bottom: 8px; }
   .prose :global(strong) { color: var(--ink); }
+  .prose :global(table) {
+    display: block; overflow-x: auto; max-width: 100%;
+    border-collapse: collapse; margin: 8px 0 28px;
+    font-size: 0.92rem; line-height: 1.45;
+  }
+  .prose :global(th), .prose :global(td) {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    text-align: left; vertical-align: top;
+  }
+  .prose :global(th) { background: var(--panel); color: var(--ink); font-weight: 700; white-space: nowrap; }
+  .prose :global(td) { white-space: nowrap; }
+  .prose :global(td:first-child) { color: var(--ink); font-weight: 600; white-space: normal; min-width: 150px; }
+  .prose :global(tbody tr:nth-child(even)) { background: #fafbfd; }
   .prose :global(a) {
     color: var(--blue-deep);
     text-decoration: underline;
