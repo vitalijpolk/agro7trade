@@ -1,9 +1,9 @@
 import type { ImageMetadata } from 'astro';
 import logo from '../assets/images/logo.png';
-import cornImg from '../assets/images/corn-pack.png';
-import sunflowerImg from '../assets/images/sunflower-pack.png';
-import cornCategoryImg from '../assets/images/corn-category.png';
-import sunflowerCategoryImg from '../assets/images/sunflower-category.png';
+import cornImg from '../assets/images/corn-product.jpg';
+import sunflowerImg from '../assets/images/sunflower-product.jpg';
+import cornCategoryImg from '../assets/images/corn-category.jpg';
+import sunflowerCategoryImg from '../assets/images/sunflower-category.jpg';
 import fieldAngora from '../assets/images/field-angora.jpg';
 import fieldKaskara from '../assets/images/field-kaskara.jpg';
 import fieldSigiriya from '../assets/images/field-sigiriya.jpg';

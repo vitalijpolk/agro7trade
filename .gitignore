@@ -87,3 +87,6 @@ npm-debug.log*
 !public/*.png
 !src/**/*.jpg
 !src/**/*.png
+
+# Stock photo previews
+/scripts/.stock-preview/

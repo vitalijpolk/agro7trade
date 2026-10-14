@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import { getImage } from 'astro:assets';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -14,6 +15,10 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 const dateFmt = new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const ogImage = post.data.cover
+  ? (await getImage({ src: post.data.cover, width: 1200, format: 'jpg' })).src
+  : undefined;
 
 const siteUrl = Astro.site!.toString().replace(/\/$/, '');
 const postUrl = `${siteUrl}/blog/${post.id}/`;
@@ -59,7 +64,7 @@ const faqSchema = post.data.faq && post.data.faq.length > 0
   : null;
 ---
 
-<BaseLayout title={`${post.data.title} — Agro7Trade`} description={post.data.excerpt} type="article">
+<BaseLayout title={`${post.data.title} — Agro7Trade`} description={post.data.excerpt} type="article" image={ogImage}>
   <Fragment slot="schema">
     <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
@@ -113,6 +118,14 @@ const faqSchema = post.data.faq && post.data.faq.length > 0
     border-radius: 12px;
     margin: 8px 0 28px;
     display: block;
+  }
+  .prose :global(p:has(> img + em)) { margin: 8px 0 28px; }
+  .prose :global(img + em) {
+    display: block;
+    margin-top: -18px;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: var(--muted);
   }
   .prose :global(ul), .prose :global(ol) {
     margin: 0 0 20px 0;
