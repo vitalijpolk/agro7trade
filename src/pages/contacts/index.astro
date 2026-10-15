@@ -94,5 +94,5 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   import { wireLeadForm } from '../../lib/submitLead';
 
   const form = document.getElementById('contactForm') as HTMLFormElement | null;
-  if (form) wireLeadForm(form, () => ({ form: 'callback' }));
+  if (form) wireLeadForm(form, () => ({ type: 'callback' }));
 </script>

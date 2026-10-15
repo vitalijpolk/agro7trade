@@ -2,7 +2,11 @@ const FAIL = 'Не вдалося відправити. Зателефонуйт
 
 // Sends a site form to /api/order. Expects the form to contain hidden `company` (honeypot)
 // and `startedAt` inputs, a submit button, and a [role=status] element for the result text.
-export function wireLeadForm(form: HTMLFormElement, extra: () => Record<string, string>) {
+export function wireLeadForm(
+  form: HTMLFormElement,
+  extra: () => Record<string, string>,
+  onSuccess?: () => void,
+) {
   const startedAt = form.querySelector<HTMLInputElement>('input[name="startedAt"]');
   const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
   const note = form.querySelector<HTMLElement>('[role="status"]');
@@ -15,7 +19,7 @@ export function wireLeadForm(form: HTMLFormElement, extra: () => Record<string, 
     const payload = { ...Object.fromEntries(fd) as Record<string, string>, ...extra(), page: location.href };
 
     if (button) button.disabled = true;
-    if (note) { note.textContent = 'Надсилаємо…'; note.classList.remove('is-error'); }
+    if (note) { note.textContent = 'Надсилаємо…'; note.classList.remove('is-error', 'is-ok'); }
 
     let ok = false;
     let message = FAIL;
@@ -32,11 +36,16 @@ export function wireLeadForm(form: HTMLFormElement, extra: () => Record<string, 
       /* network error → FAIL */
     }
 
-    if (note) { note.textContent = message; note.classList.toggle('is-error', !ok); }
+    if (note) {
+      note.textContent = message;
+      note.classList.toggle('is-error', !ok);
+      note.classList.toggle('is-ok', ok);
+    }
     if (ok) {
       form.reset();
       form.querySelectorAll('select').forEach((s) => s.dispatchEvent(new Event('change')));
       stamp();
+      onSuccess?.();
     }
     if (button) button.disabled = false;
   });

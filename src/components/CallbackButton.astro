@@ -1,0 +1,161 @@
+---
+const hours = 'Пн–Пт: 9:00–18:00';
+---
+
+<div class="cb">
+  <button type="button" class="cb-tip" id="cbTip" tabindex="-1">
+    Хочете, щоб ми вам передзвонили? Залиште заявку!
+  </button>
+  <button type="button" class="cb-button" id="cbOpen" aria-label="Замовити зворотний дзвінок" aria-haspopup="dialog">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="16 2 16 8 22 8"></polyline>
+      <line x1="23" y1="1" x2="16" y2="8"></line>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+</div>
+
+<dialog class="cb-dialog" id="cbDialog" aria-labelledby="cbTitle">
+  <div class="cb-panel">
+    <button type="button" class="cb-close" id="cbClose" aria-label="Закрити">×</button>
+    <h2 id="cbTitle">Хочете, щоб ми вам передзвонили?</h2>
+    <p class="cb-lead">Залиште номер — ми передзвонимо і допоможемо підібрати насіння. {hours}</p>
+
+    <form id="cbForm">
+      <div class="cb-fg">
+        <label for="cbPhone">Телефон</label>
+        <input type="tel" id="cbPhone" name="phone" autocomplete="tel" placeholder="+38 (___) ___-__-__" required autofocus />
+      </div>
+      <div class="cb-fg">
+        <label for="cbName">Ім'я <span class="cb-opt">(необов'язково)</span></label>
+        <input type="text" id="cbName" name="name" autocomplete="name" />
+      </div>
+      <div class="cb-fg">
+        <label for="cbComment">Що вас цікавить <span class="cb-opt">(необов'язково)</span></label>
+        <textarea id="cbComment" name="comment" rows="3"></textarea>
+      </div>
+
+      <input type="hidden" name="type" value="callback" />
+      <input type="hidden" name="page" />
+      <div class="cb-hp" aria-hidden="true">
+        <label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+        <input type="hidden" name="startedAt" />
+      </div>
+
+      <button type="submit" class="btn btn-primary cb-submit">Передзвоніть мені</button>
+      <p class="cb-note" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</dialog>
+
+<style>
+  .cb { position: relative; display: flex; }
+
+  .cb-button {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--blue-deep);
+    box-shadow: 0 6px 22px rgba(0,0,0,.22);
+    transition: transform .15s;
+  }
+  .cb-button:hover { transform: scale(1.08); }
+
+  .cb-tip {
+    position: absolute; right: calc(100% + 12px); top: 50%;
+    transform: translate(6px, -50%);
+    width: 230px;
+    background: #fff; color: var(--ink);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 8px 22px rgba(20,20,20,.14);
+    font-size: 0.85rem; font-weight: 600; line-height: 1.4; text-align: left;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s, transform .2s;
+  }
+  .cb-tip.is-visible,
+  .cb:hover .cb-tip { opacity: 1; pointer-events: auto; transform: translate(0, -50%); }
+
+  .cb-dialog {
+    margin: auto;
+    width: min(420px, 100vw - 32px);
+    max-height: calc(100dvh - 32px);
+    padding: 0; border: none; border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.3);
+    color: var(--text);
+  }
+  .cb-dialog::backdrop { background: rgba(20,20,20,.55); }
+  .cb-panel { position: relative; padding: 28px 24px 24px; }
+  .cb-close {
+    position: absolute; top: 10px; right: 12px;
+    width: 36px; height: 36px; border-radius: 50%;
+    font-size: 1.6rem; line-height: 1; color: var(--muted);
+  }
+  .cb-close:hover { background: var(--panel); color: var(--ink); }
+  .cb-dialog h2 { font-size: 1.3rem; padding-right: 32px; }
+  .cb-lead { margin-top: 8px; color: var(--muted); font-size: 0.92rem; line-height: 1.5; }
+
+  #cbForm { margin-top: 18px; display: flex; flex-direction: column; gap: 14px; }
+  .cb-fg { display: flex; flex-direction: column; gap: 6px; }
+  .cb-fg label { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+  .cb-opt { font-weight: 400; color: var(--muted); }
+  .cb-fg input, .cb-fg textarea {
+    font-family: var(--font-body); font-size: 1rem;
+    padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 9px;
+    background: #fff; color: var(--text);
+  }
+  .cb-fg textarea { resize: vertical; min-height: 76px; }
+  .cb-fg input:focus, .cb-fg textarea:focus { border-color: var(--blue); outline: none; }
+  .cb-submit { justify-content: center; margin-top: 4px; }
+  .cb-note { min-height: 1.2em; font-size: 0.88rem; font-weight: 600; }
+  .cb-note:global(.is-ok) { color: #2e7d32; }
+  .cb-note:global(.is-error) { color: #c62828; }
+  .cb-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  @media (max-width: 640px) {
+    .cb-button { width: 50px; height: 50px; }
+    .cb-tip { width: 200px; font-size: 0.8rem; padding: 8px 12px; }
+    .cb-panel { padding: 24px 18px 20px; }
+  }
+</style>
+
+<script>
+  import { wireLeadForm } from '../lib/submitLead';
+
+  const dialog = document.getElementById('cbDialog') as HTMLDialogElement;
+  const form = document.getElementById('cbForm') as HTMLFormElement;
+  const tip = document.getElementById('cbTip')!;
+  const note = form.querySelector<HTMLElement>('[role="status"]')!;
+  const TIP_KEY = 'a7t-callback-tip-shown';
+
+  function open() {
+    tip.classList.remove('is-visible');
+    form.querySelector<HTMLInputElement>('input[name="page"]')!.value = location.href;
+    form.querySelector<HTMLInputElement>('input[name="startedAt"]')!.value = String(Date.now());
+    note.textContent = '';
+    note.classList.remove('is-ok', 'is-error');
+    dialog.showModal();
+  }
+
+  document.getElementById('cbOpen')!.addEventListener('click', open);
+  tip.addEventListener('click', open);
+  document.getElementById('cbClose')!.addEventListener('click', () => dialog.close());
+  // Клік по затемненому фону: подія приходить на сам <dialog>, а не на панель всередині.
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+
+  let closeTimer: number | undefined;
+  dialog.addEventListener('close', () => window.clearTimeout(closeTimer));
+  wireLeadForm(form, () => ({}), () => {
+    closeTimer = window.setTimeout(() => dialog.close(), 3500);
+  });
+
+  let shown = false;
+  try { shown = sessionStorage.getItem(TIP_KEY) === '1'; } catch { /* storage blocked */ }
+  if (!shown) {
+    window.setTimeout(() => {
+      if (dialog.open) return;
+      tip.classList.add('is-visible');
+      try { sessionStorage.setItem(TIP_KEY, '1'); } catch { /* storage blocked */ }
+      window.setTimeout(() => tip.classList.remove('is-visible'), 10000);
+    }, 20000);
+  }
+</script>
