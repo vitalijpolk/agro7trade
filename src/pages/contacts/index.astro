@@ -43,10 +43,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
         <div class="fg">
           <label for="cMsg">Що цікавить</label>
-          <textarea id="cMsg" name="message" placeholder="Наприклад: кукурудза «Самарія», 40 га, Полтавська обл."></textarea>
+          <textarea id="cMsg" name="comment" placeholder="Наприклад: кукурудза «Самарія», 40 га, Полтавська обл."></textarea>
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+          <input type="hidden" name="startedAt" />
         </div>
         <button type="submit" class="btn btn-primary">Надіслати заявку</button>
-        <p class="form-note" id="formNote" role="status"></p>
+        <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
       </form>
     </div>
   </section>
@@ -78,6 +82,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   .fg textarea { min-height: 92px; resize: vertical; }
   .fg input:focus, .fg textarea:focus { border-color: var(--blue); outline: none; }
   .form-note { font-size: 0.86rem; color: var(--blue-deep); min-height: 1.2em; }
+  .form-note:global(.is-error) { color: #c62828; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   @media (max-width: 800px) {
     .contact-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -85,10 +91,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 </style>
 
 <script>
+  import { wireLeadForm } from '../../lib/submitLead';
+
   const form = document.getElementById('contactForm') as HTMLFormElement | null;
-  const note = document.getElementById('formNote');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (note) note.textContent = 'Форма поки не підключена до бекенду — це чернетка вёрстки.';
-  });
+  if (form) wireLeadForm(form, () => ({ form: 'callback' }));
 </script>

@@ -88,7 +88,7 @@ const breadcrumbSchema = {
           </div>
         )}
 
-        <form class="order-form" id="orderForm">
+        <form class="order-form" id="orderForm" data-product={hybrid.title}>
           {hybrid.priceTiers && hybrid.priceTiers.length > 1 && (
             <div class="fg">
               <label for="oVariant">Варіант</label>
@@ -124,8 +124,12 @@ const breadcrumbSchema = {
             <textarea id="oComment" name="comment" placeholder="Необов'язково"></textarea>
           </div>
 
+          <div class="hp" aria-hidden="true">
+            <label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+            <input type="hidden" name="startedAt" />
+          </div>
           <button type="submit" class="btn btn-primary">Замовити</button>
-          <p class="form-note" id="orderNote" role="status"></p>
+          <p class="form-note" id="orderNote" role="status" aria-live="polite"></p>
         </form>
 
         <div class="quick-order">
@@ -266,6 +270,8 @@ const breadcrumbSchema = {
 
   .order-form .btn { align-self: flex-start; margin-top: 6px; }
   .form-note { font-size: 0.86rem; color: var(--blue-deep); min-height: 1.2em; }
+  .form-note:global(.is-error) { color: #c62828; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   .description { margin-top: 24px; color: var(--text); line-height: 1.7; }
 
@@ -316,6 +322,8 @@ const breadcrumbSchema = {
 </style>
 
 <script>
+  import { wireLeadForm } from '../../lib/submitLead';
+
   const qtyInput = document.getElementById('oQty') as HTMLInputElement | null;
   document.querySelector('.qty-btn.minus')?.addEventListener('click', () => {
     if (!qtyInput) return;
@@ -335,9 +343,11 @@ const breadcrumbSchema = {
   });
 
   const form = document.getElementById('orderForm') as HTMLFormElement | null;
-  const note = document.getElementById('orderNote');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (note) note.textContent = 'Форма поки не підключена до бекенду — це чернетка вёрстки.';
-  });
+  if (form) {
+    wireLeadForm(form, () => ({
+      form: 'order',
+      product: form.dataset.product ?? '',
+      variant: variantSelect?.selectedOptions[0]?.textContent?.trim() ?? '',
+    }));
+  }
 </script>

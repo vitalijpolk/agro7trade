@@ -73,6 +73,7 @@ select:focus-visible {
 }
 .btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
 .btn-primary:hover { background: var(--blue-deep); border-color: var(--blue-deep); }
+.btn:disabled { opacity: .6; cursor: progress; }
 .btn-outline { background: transparent; color: #fff; border-color: rgba(255,255,255,.5); }
 .btn-outline:hover { background: rgba(255,255,255,.12); border-color: #fff; }
 .btn-light { background: #fff; color: var(--dark); border-color: #fff; }
