@@ -1,27 +1,5 @@
 [
   {
-    "file": "src/assets/images/corn-category.jpg",
-    "id": "b7068837-1415-4296-acd5-a2bdf98e1d86",
-    "title": "Corn Field",
-    "creator": "Matt Bango",
-    "source": "stocksnap",
-    "license": "cc0",
-    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "original": "https://stocksnap.io/photo/corn-field-J03DR5ED7H",
-    "downloaded": "2026-10-14"
-  },
-  {
-    "file": "src/assets/images/sunflower-category.jpg",
-    "id": "7f62948f-e120-40cf-8b5b-4033e1162e22",
-    "title": "Sunflowers Field",
-    "creator": "Sergey Zolkin",
-    "source": "stocksnap",
-    "license": "cc0",
-    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "original": "https://stocksnap.io/photo/sunflowers-field-O8BOGL1JNV",
-    "downloaded": "2026-10-14"
-  },
-  {
     "file": "src/content/posts/tekhnologiya-sonyashnyk-cover.jpg",
     "id": "8b76a83c-b95d-43d2-a59a-804545f4e005",
     "title": "Sunflower Field",
