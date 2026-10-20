@@ -1,0 +1,108 @@
+---
+// Плашка «Передзвоніть мені»: з'являється одразу, один раз за візит, на всіх сторінках, крім «Контактів».
+const hidden = Astro.url.pathname.startsWith('/contacts');
+---
+
+{!hidden && (
+  <div class="cp" id="cbPopup" role="dialog" aria-labelledby="cpTitle" hidden>
+    <button type="button" class="cp-close" id="cpClose" aria-label="Закрити">×</button>
+    <p class="cp-title" id="cpTitle">Передзвонимо за 30 секунд</p>
+    <p class="cp-lead" id="cpLead">Залиште номер — менеджер зателефонує й допоможе підібрати насіння.</p>
+
+    <form id="cpForm" class="cp-form">
+      <label class="cp-label" for="cpPhone">Ваш телефон</label>
+      <div class="cp-row">
+        <input type="tel" id="cpPhone" name="phone" autocomplete="tel" placeholder="+38 (___) ___-__-__" required />
+        <button type="submit" class="btn btn-primary cp-submit">Передзвоніть мені</button>
+      </div>
+      <input type="hidden" name="type" value="callback" />
+      <div class="cp-hp" aria-hidden="true">
+        <label>Компанія <input type="text" name="company" tabindex="-1" autocomplete="off" /></label>
+        <input type="hidden" name="startedAt" />
+      </div>
+      <p class="cp-note" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+)}
+
+<style>
+  .cp {
+    position: fixed; left: 24px; bottom: 24px; z-index: 110;
+    width: 500px; max-width: calc(100vw - 48px);
+    background: #fff; color: var(--text);
+    border: 1px solid var(--border); border-radius: 18px;
+    box-shadow: 0 22px 60px rgba(20,20,20,.26);
+    padding: 30px 30px 22px;
+    animation: cp-in .25s ease-out;
+  }
+  .cp[hidden] { display: none; }
+  @keyframes cp-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  .cp-close {
+    position: absolute; top: 12px; right: 14px;
+    width: 38px; height: 38px; border-radius: 50%;
+    font-size: 1.8rem; line-height: 1; color: var(--muted);
+  }
+  .cp-close:hover { background: var(--panel); color: var(--ink); }
+  .cp-title { font-size: 1.6rem; font-weight: 800; color: var(--ink); padding-right: 36px; line-height: 1.2; }
+  .cp-lead { margin-top: 10px; font-size: 1rem; color: var(--muted); line-height: 1.5; }
+  .cp-form { margin-top: 20px; }
+  .cp-label { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+  .cp-row { margin-top: 8px; display: flex; gap: 10px; }
+  .cp-row input {
+    flex: 1; min-width: 0;
+    font-family: var(--font-body); font-size: 1.1rem;
+    padding: 15px 16px; border: 1.5px solid var(--border); border-radius: 10px;
+  }
+  .cp-row input:focus { border-color: var(--blue); outline: none; }
+  .cp-submit { padding: 15px 20px; font-size: 1.02rem; white-space: nowrap; }
+  .cp-note { min-height: 1.1em; margin-top: 10px; font-size: 0.95rem; font-weight: 600; }
+  .cp-note:global(.is-ok) { color: #2e7d32; }
+  .cp-note:global(.is-error) { color: #c62828; }
+  .cp-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  @media (max-width: 640px) {
+    /* Праворуч лишаємо місце під колонку кнопок мессенджерів. */
+    .cp { left: 12px; right: 78px; bottom: 16px; width: auto; max-width: none; padding: 22px 18px 16px; }
+    .cp-title { font-size: 1.3rem; }
+    .cp-lead { font-size: 0.92rem; }
+    .cp-row { flex-direction: column; }
+    .cp-submit { justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { .cp { animation: none; } }
+</style>
+
+<script>
+  import { wireLeadForm } from '../lib/submitLead';
+
+  const popup = document.getElementById('cbPopup');
+  if (popup) {
+    const form = document.getElementById('cpForm') as HTMLFormElement;
+    const KEY = 'a7t-callback-popup';
+    const close = () => { popup.hidden = true; };
+
+    // Робочий час Пн–Пт 9:00–18:00 за Києвом: поза ним не обіцяємо дзвінок за 30 секунд.
+    const kyiv = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Kyiv', weekday: 'short', hour: 'numeric', hour12: false })
+      .formatToParts(new Date());
+    const day = kyiv.find((p) => p.type === 'weekday')?.value;
+    const hour = Number(kyiv.find((p) => p.type === 'hour')?.value);
+    if (day === 'Sat' || day === 'Sun' || hour < 9 || hour >= 18) {
+      document.getElementById('cpTitle')!.textContent = 'Передзвонимо в робочий час';
+      document.getElementById('cpLead')!.textContent =
+        'Залиште номер — менеджер зателефонує Пн–Пт з 9:00 до 18:00 і допоможе підібрати насіння.';
+    }
+
+    document.getElementById('cpClose')!.addEventListener('click', close);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !popup.hidden) close(); });
+    wireLeadForm(form, () => ({}), () => window.setTimeout(close, 4000));
+
+    let seen = false;
+    try { seen = sessionStorage.getItem(KEY) === '1'; } catch { /* storage blocked */ }
+    if (!seen) {
+      popup.hidden = false;
+      // Хмарка біля кнопок мессенджерів інакше накладається на плашку на телефоні.
+      document.body.classList.add('bubbles-dismissed');
+      try { sessionStorage.setItem(KEY, '1'); } catch { /* storage blocked */ }
+    }
+  }
+</script>
