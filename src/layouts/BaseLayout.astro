@@ -23,14 +23,14 @@ const organizationSchema = {
   url: 'https://agro7trade.com.ua',
   logo: 'https://agro7trade.com.ua/favicon.png',
   description: 'Постачальник сертифікованого насіння кукурудзи та соняшника в Україні.',
-  contactPoint: {
+  contactPoint: ['+380994527949', '+380973125318'].map((telephone) => ({
     '@type': 'ContactPoint',
-    telephone: '+380994527949',
+    telephone,
     email: 'agro7trade.ua@gmail.com',
     contactType: 'customer service',
     areaServed: 'UA',
     availableLanguage: ['Ukrainian'],
-  },
+  })),
 };
 ---
 

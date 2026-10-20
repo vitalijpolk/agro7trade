@@ -1,4 +1,4 @@
-const FAIL = 'Не вдалося відправити. Зателефонуйте нам: +38 (099) 452-79-49';
+const FAIL = 'Не вдалося відправити. Зателефонуйте нам: +38 (099) 452-79-49 або +38 (097) 312-53-18';
 
 // Sends a site form to /api/order. Expects the form to contain hidden `company` (honeypot)
 // and `startedAt` inputs, a submit button, and a [role=status] element for the result text.
